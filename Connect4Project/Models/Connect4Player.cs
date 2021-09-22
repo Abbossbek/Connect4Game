@@ -7,7 +7,7 @@ using System.Windows.Media;
 
 namespace Connect4Game.Models
 {
-    abstract class Connect4Player
+    public abstract class Connect4Player
     {
         public string Name { get; set; }
         public Brush Color { get; set; }

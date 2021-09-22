@@ -44,8 +44,7 @@ namespace Connect4Game.ViewModels
         public void PlayGameCommand(string player1, string player2)
         {
             var conductor = this.Parent as IConductor;
-                var gamePlayInput = new GamePlayInput(Player1, Player2);
-                conductor.ActivateItemAsync(new GamePlayViewModel(gamePlayInput));
+            conductor.ActivateItemAsync( new ChooseColorViewModel(new HumanPlayer() { Name = player1}, new HumanPlayer() { Name = player2}));
 
         }
     }

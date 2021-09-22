@@ -24,6 +24,9 @@ namespace Connect4Game.ViewModels
     public class GamePlayViewModel : Screen
     {
 
+        private Connect4Player _player1;
+        private Connect4Player _player2;
+
         const int winnerPoints = 100;  // player score on win
 
         private const int MaxRow = 6;
@@ -40,24 +43,22 @@ namespace Connect4Game.ViewModels
         private bool? _switchPlayers { get; set; }
         private bool _canPlay { get; set; } = true;
 
-        private string _player1 { get; set; }
-        public string Player1
+        public Brush Player1Color
         {
-            get => _player1;
-            set
-            {
-                _player1 = value;
-            }
+            get => _player1?.Color;
+        }
+        public Brush Player2Color
+        {
+            get => _player2?.Color;
+        }
+        public string Player1Name
+        {
+            get => _player1?.Name;
         }
 
-        private string _player2 { get; set; }
-        public string Player2
+        public string Player2Name
         {
-            get => _player2;
-            set
-            {
-                _player2 = value;
-            }
+            get => _player2.Name;
         }
 
         private string _gameState { get; set; }
@@ -74,10 +75,10 @@ namespace Connect4Game.ViewModels
         private Dictionary<string, int> _gameMapIndexDictionary;
 
 
-        public GamePlayViewModel(GamePlayInput playInput)
+        public GamePlayViewModel(Connect4Player player1, Connect4Player player2)
         {
-            Player1 = playInput.Player1;
-            Player2 = playInput.Player2;
+            _player1 = player1;
+            _player2 = player2;
 
             _switchPlayers = true;
             _gameMapIndexDictionary = new Dictionary<string, int>();
@@ -90,7 +91,7 @@ namespace Connect4Game.ViewModels
             _gameMapIndexDictionary.Add("col6", 5);
             _gameMapIndexDictionary.Add("col7", 6);
 
-            GameState = $"{Player1}'s Turn";
+            GameState = $"{Player1Name}'s Turn";
             _canPlay = true;
 
 
@@ -117,7 +118,7 @@ namespace Connect4Game.ViewModels
 
                     if (_switchPlayers == true)
                     {
-                        calButton.Foreground = Brushes.Red;
+                        calButton.Foreground = _player1.Color;
                         _gameMap[i, colIndex] = 'r';
                         var result = checkWin('r', stackContainer);
                         if (result)
@@ -125,13 +126,13 @@ namespace Connect4Game.ViewModels
                             _canPlay = false;
                             GameState = "Game Over";
                             WindowManager windowManager = new WindowManager();
-                            windowManager.ShowDialogAsync(new CustomAlertViewModel($"{Player1} Won!"));
+                            windowManager.ShowDialogAsync(new CustomAlertViewModel($"{Player1Name} Won!"));
                         }
                     }
 
                     else if (_switchPlayers == false)
                     {
-                        calButton.Foreground = Brushes.Yellow;
+                        calButton.Foreground = _player2.Color;
                         _gameMap[i, colIndex] = 'y';
                         var result = checkWin('y', stackContainer);
                         if (result)
@@ -139,7 +140,7 @@ namespace Connect4Game.ViewModels
                             _canPlay = false;
                             GameState = "Game Over";
                             WindowManager windowManager = new WindowManager();
-                            windowManager.ShowDialogAsync(new CustomAlertViewModel($"{Player2} Won!"));
+                            windowManager.ShowDialogAsync(new CustomAlertViewModel($"{Player2Name} Won!"));
                         }
                     }
 
@@ -150,10 +151,10 @@ namespace Connect4Game.ViewModels
             _switchPlayers = !_switchPlayers;
 
             if (_switchPlayers == true && _canPlay)
-                GameState = $"{Player1}'s Turn";
+                GameState = $"{Player1Name}'s Turn";
 
             else if (_switchPlayers == false && _canPlay)
-                GameState = $"{Player2}'s Turn";
+                GameState = $"{Player2Name}'s Turn";
         }
 
 

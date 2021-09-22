@@ -42,7 +42,7 @@
             Orientation="Horizontal">
 
             <Label
-                x:Name="Player1"
+                x:Name="Player1Name"
                 Margin="0,50,0,0"
                 VerticalAlignment="Center"
                 FontFamily="{StaticResource Handlee}"
@@ -50,10 +50,11 @@
                 Foreground="White" />
 
             <Ellipse
+                x:Name="Player1Color"
+                Fill="{Binding Player1Color}"
                 Margin="0,50,0,0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
-                Fill="Red"
                 StrokeThickness="0"
                 Style="{StaticResource MainEllipseStyle}" />
 
@@ -67,7 +68,7 @@
             Orientation="Horizontal">
 
             <Label
-                x:Name="Player2"
+                x:Name="Player2Name"
                 Margin="0,50,0,0"
                 VerticalAlignment="Center"
                 FontFamily="{StaticResource Handlee}"
@@ -75,10 +76,11 @@
                 Foreground="White" />
 
             <Ellipse
+                x:Name="Player2Color"
                 Margin="0,50,0,0"
+                Fill="{Binding Player2Color}"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Center"
-                Fill="Yellow"
                 StrokeThickness="0"
                 Style="{StaticResource MainEllipseStyle}" />
 

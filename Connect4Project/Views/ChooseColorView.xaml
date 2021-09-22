@@ -8,42 +8,29 @@
              mc:Ignorable="d"
              d:DesignHeight="450"
              d:DesignWidth="800">
-    <UserControl.Resources>
-        <Style TargetType="{x:Type Button}">
-            <Setter Property="Width"
-                    Value="100" />
-            <Setter Property="Height"
-                    Value="100" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type Button}">
-                        <Ellipse Fill="{Binding Foreground, RelativeSource={RelativeSource TemplatedParent}}"
-                                 Style="{StaticResource MainEllipseStyle}"
-                                 Width="{TemplateBinding}"
-                                 Height="{TemplateBinding}" />
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-    </UserControl.Resources>
     <Grid>
-        <TextBlock x:Name="ChooseColor" />
+        <TextBlock x:Name="ChooseColor" Foreground="Yellow" TextAlignment="Center" FontSize="25" Margin="0,20" VerticalAlignment="Top"/>
         <UniformGrid Columns="3"
                      Rows="2"
-                     Width="400"
+                     Width="500"
                      VerticalAlignment="Center"
                      Height="300">
-            <Button cal:Message.Attach="[Event Click] = [Action SelectColor($source)]"
+            <Button Style="{StaticResource ColorButton}" cal:Message.Attach="[Event Click] = [Action SelectColor($source)]"
                     Foreground="Red" />
-            <Button cal:Message.Attach="[Event Click] = [Action SelectColor($source)]"
+            <Button Style="{StaticResource ColorButton}"
+                    cal:Message.Attach="[Event Click] = [Action SelectColor($source)]"
                     Foreground="Green" />
-            <Button cal:Message.Attach="[Event Click] = [Action SelectColor($source)]"
+            <Button Style="{StaticResource ColorButton}"
+                    cal:Message.Attach="[Event Click] = [Action SelectColor($source)]"
                     Foreground="Blue" />
-            <Button cal:Message.Attach="[Event Click] = [Action SelectColor($source)]"
+            <Button Style="{StaticResource ColorButton}"
+                    cal:Message.Attach="[Event Click] = [Action SelectColor($source)]"
                     Foreground="Pink" />
-            <Button cal:Message.Attach="[Event Click] = [Action SelectColor($source)]"
+            <Button Style="{StaticResource ColorButton}"
+                    cal:Message.Attach="[Event Click] = [Action SelectColor($source)]"
                     Foreground="Yellow" />
-            <Button cal:Message.Attach="[Event Click] = [Action SelectColor($source)]"
+            <Button Style="{StaticResource ColorButton}"
+                    cal:Message.Attach="[Event Click] = [Action SelectColor($source)]"
                     Foreground="Gray" />
 
         </UniformGrid>

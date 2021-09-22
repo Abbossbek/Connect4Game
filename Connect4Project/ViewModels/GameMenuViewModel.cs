@@ -16,13 +16,15 @@ namespace Connect4Game.ViewModels
             _closeWindow = closeWindow;
         }
 
-        public void SinglePlayer()
+        public async void SinglePlayer()
         {
             var conductor = this.Parent as IConductor;
-            var gamePlayInput = new GamePlayInput("You", "Computer");
-            var player = new HumanPlayer();
-            conductor.ActivateItemAsync(new ChooseColorViewModel(player));
-
+            await conductor.ActivateItemAsync(new ChooseDifficultyViewModel());
+        }
+        public async void MultiPlayer()
+        {
+            var conductor = this.Parent as IConductor;
+            await conductor.ActivateItemAsync(new UserDetailsViewModel());
         }
 
         public void QuitCommand()
