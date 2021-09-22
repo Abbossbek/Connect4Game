@@ -20,17 +20,9 @@ namespace Connect4Game.Models
         public int Score { get => score; set => score = value; }
         public int Col { get => col; set => col = value; }
 
-        public TreeNode(int[,] board, int c, int r, bool yourMove, int cC, int oppCounterColour, int depth, int prevCol)// Constructor for none root node
+        public TreeNode(int[,] board, int c, int r, bool yourMove, int depth, int prevCol)// Constructor for none root node
         {
             this.depth = depth;
-            if (yourMove)
-            {
-                this.counterColour = cC;
-            }
-            else
-            {
-                this.counterColour = oppCounterColour;
-            }
             Col = c;
             row = r;
             copyBoard(board);
@@ -40,27 +32,27 @@ namespace Connect4Game.Models
             }
             if (depth > 0)
             {
-                createBranches(yourMove, cC, oppCounterColour);// creates the branches which represent all the moves that can be made next turn.
+                createBranches(yourMove);// creates the branches which represent all the moves that can be made next turn.
             }
             Score = calculateScore();
         }
 
-        public TreeNode(int[,] board, int cC, int oppCounterColour, int depth)// constructor for root node.
+        public TreeNode(int[,] board, int depth)// constructor for root node.
         {
             Col = -1;
             this.depth = depth;
             copyBoard(board);
-            createBranches(false, cC, oppCounterColour);
+            createBranches(false);
         }
 
-        public void createBranches(bool yourMove, int cC, int oppCounterColour)
+        public void createBranches(bool yourMove)
         {
             for (int i = 0; i < moves.Length; i++)
             {
                 int r = playerMove(moveBoard, i);
                 if (r != -1)
                 {
-                    moves[i] = new TreeNode(moveBoard, i, r, !yourMove, cC, oppCounterColour, depth - 1, Col);// Will create a new node for every possible move afterwards.
+                    moves[i] = new TreeNode(moveBoard, i, r, !yourMove, depth - 1, Col);// Will create a new node for every possible move afterwards.
                 }
             }
         }

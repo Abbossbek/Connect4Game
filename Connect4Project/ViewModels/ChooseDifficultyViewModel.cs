@@ -18,19 +18,19 @@ namespace Connect4Game.ViewModels
         {
             var conductor = this.Parent as IConductor;
             var player = new HumanPlayer() { Name = "You" };
-            conductor.ActivateItemAsync(new ChooseColorViewModel(player, new AIPlayer()));
+            conductor.ActivateItemAsync(new ChooseColorViewModel(player, new EasyAIPlayer()));
         }
         public void Medium()
         {
             var conductor = this.Parent as IConductor;
             var player = new HumanPlayer() { Name = "You" };
-            conductor.ActivateItemAsync(new ChooseColorViewModel(player, new AIPlayer()));
+            conductor.ActivateItemAsync(new ChooseColorViewModel(player, new MediumAIPlayer()));
         }
         public void Hard()
         {
             var conductor = this.Parent as IConductor;
             var player = new HumanPlayer() { Name = "You" };
-            conductor.ActivateItemAsync(new ChooseColorViewModel(player, new AIPlayer()));
+            conductor.ActivateItemAsync(new ChooseColorViewModel(player, new HardAIPlayer()));
         }
     }
 }

@@ -31,13 +31,13 @@ namespace Connect4Game.ViewModels
 
         private const int MaxRow = 6;
         private const int MaxColumn = 7;
-        private char[,] _gameMap = new char[MaxRow, MaxColumn] {
-                                                     {' ', ' ', ' ', ' ',' ',' ',' ' },
-                                                     {' ', ' ', ' ', ' ',' ',' ',' ' },
-                                                     {' ', ' ', ' ', ' ',' ',' ',' ' },
-                                                     {' ', ' ', ' ', ' ',' ',' ',' ' },
-                                                     {' ', ' ', ' ', ' ',' ',' ',' ' },
-                                                     {' ', ' ', ' ', ' ',' ',' ',' ' }
+        private int[,] _gameMap = new int[MaxRow, MaxColumn] {
+                                                     {0, 0, 0, 0,0,0,0 },
+                                                     {0, 0, 0, 0,0,0,0 },
+                                                     {0, 0, 0, 0,0,0,0 },
+                                                     {0, 0, 0, 0,0,0,0 },
+                                                     {0, 0, 0, 0,0,0,0 },
+                                                     {0, 0, 0, 0,0,0,0 }
                                                    };
 
         private bool? _switchPlayers { get; set; }
@@ -104,23 +104,23 @@ namespace Connect4Game.ViewModels
 
             var selectedButton = (Button)obj;
             var stackContainer = (StackPanel)selectedButton.Parent;
-            var rowIndex = stackContainer.Children.IndexOf(selectedButton);
             var colIndex = _gameMapIndexDictionary[stackContainer.Name];
-
-            if (_gameMap[rowIndex, colIndex] == 'r' || _gameMap[rowIndex, colIndex] == 'y')
+            Play:
+            var rowIndex = stackContainer.Children.IndexOf(selectedButton);
+            if (_gameMap[rowIndex, colIndex] == 2 || _gameMap[rowIndex, colIndex] == 5)
                 return;
 
             for (int i = MaxRow - 1; i >= 0; --i)     // check for unfilled in seleceted position
             {
-                if (_gameMap[i, colIndex] == ' ')
+                if (_gameMap[i, colIndex] == 0)
                 {
                     var calButton = (Button)stackContainer.Children[i];
 
                     if (_switchPlayers == true)
                     {
                         calButton.Foreground = _player1.Color;
-                        _gameMap[i, colIndex] = 'r';
-                        var result = checkWin('r', stackContainer);
+                        _gameMap[i, colIndex] = 2;
+                        var result = checkWin(2, stackContainer);
                         if (result)
                         {
                             _canPlay = false;
@@ -133,8 +133,8 @@ namespace Connect4Game.ViewModels
                     else if (_switchPlayers == false)
                     {
                         calButton.Foreground = _player2.Color;
-                        _gameMap[i, colIndex] = 'y';
-                        var result = checkWin('y', stackContainer);
+                        _gameMap[i, colIndex] = 5;
+                        var result = checkWin(5, stackContainer);
                         if (result)
                         {
                             _canPlay = false;
@@ -154,11 +154,26 @@ namespace Connect4Game.ViewModels
                 GameState = Player1Name + (Player1Name is "You" ? "r Turn" : "'s Turn");
 
             else if (_switchPlayers == false && _canPlay)
-                GameState = Player2Name + (Player2Name is "You" ? "r Turn" : "'s Turn");
+            {
+                if(_player2.GetType() == typeof(EasyAIPlayer))
+                {
+                    colIndex = ((EasyAIPlayer)_player2).bestMove(_gameMap);
+                    goto Play;
+                }else if (_player2.GetType() == typeof(MediumAIPlayer))
+                {
+                    colIndex = ((MediumAIPlayer)_player2).bestMove(_gameMap);
+                    goto Play;
+                }else if (_player2.GetType() == typeof(HardAIPlayer))
+                {
+                    colIndex = ((HardAIPlayer)_player2).bestMove(_gameMap);
+                    goto Play;
+                }
+                    GameState = $"{Player2Name}'s Turn";
+            }
         }
 
 
-        private bool checkWin(char player, StackPanel container)
+        private bool checkWin(int player, StackPanel container)
         {
             int count = 0;
             List<Field> points = new List<Field>();
