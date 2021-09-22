@@ -129,15 +129,21 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">
                     <Grid >
-                        <Ellipse Fill="{Binding Foreground, RelativeSource={RelativeSource TemplatedParent}}" Margin=" 0"
+                        <Ellipse Fill="{Binding Foreground, RelativeSource={RelativeSource TemplatedParent}}" Margin="0"
                                  Style="{StaticResource MainEllipseStyle}"
                                  Width="{Binding Width, RelativeSource={RelativeSource TemplatedParent}}"
-                                 Height="{Binding Height, RelativeSource={RelativeSource TemplatedParent}}"
-                                  />
+                                 Height="{Binding Height, RelativeSource={RelativeSource TemplatedParent}}"/>
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver"
+                     Value="True">
+                <Setter Property="Opacity"
+                        Value="0.7" />
+            </Trigger>
+        </Style.Triggers>
     </Style>
     <Style
         x:Key="menuCloseCtrl"

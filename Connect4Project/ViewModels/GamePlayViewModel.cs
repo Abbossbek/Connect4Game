@@ -91,7 +91,7 @@ namespace Connect4Game.ViewModels
             _gameMapIndexDictionary.Add("col6", 5);
             _gameMapIndexDictionary.Add("col7", 6);
 
-            GameState = $"{Player1Name}'s Turn";
+            GameState = Player1Name + (Player1Name is "You"?"r Turn": "'s Turn");
             _canPlay = true;
 
 
@@ -151,10 +151,10 @@ namespace Connect4Game.ViewModels
             _switchPlayers = !_switchPlayers;
 
             if (_switchPlayers == true && _canPlay)
-                GameState = $"{Player1Name}'s Turn";
+                GameState = Player1Name + (Player1Name is "You" ? "r Turn" : "'s Turn");
 
             else if (_switchPlayers == false && _canPlay)
-                GameState = $"{Player2Name}'s Turn";
+                GameState = Player2Name + (Player2Name is "You" ? "r Turn" : "'s Turn");
         }
 
 

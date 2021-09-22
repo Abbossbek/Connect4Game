@@ -9,7 +9,7 @@
              d:DesignHeight="450"
              d:DesignWidth="800">
     <Grid>
-        <TextBlock x:Name="ChooseColor" Foreground="Yellow" TextAlignment="Center" FontSize="25" Margin="0,20" VerticalAlignment="Top"/>
+        <TextBlock x:Name="ChooseColor" Foreground="Yellow" TextAlignment="Center" FontSize="25" HorizontalAlignment="Center" Margin="0,20" VerticalAlignment="Top"/>
         <UniformGrid Columns="3"
                      Rows="2"
                      Width="500"

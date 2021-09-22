@@ -52,6 +52,8 @@ namespace Connect4Game.ViewModels
             if (Items.Count > 1)
             {
                 Items.RemoveAt(Items.Count - 1);
+                if(Items[Items.Count - 1].GetType() == typeof(ChooseColorViewModel))
+                    BackOnePage();
                 var index = Items.Count - 1;
                 ActivateItemAsync(Items[index]);
             }
