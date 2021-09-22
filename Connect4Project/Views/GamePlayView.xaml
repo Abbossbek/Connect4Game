@@ -98,6 +98,7 @@
             CornerRadius="20">
 
             <StackPanel
+                x:Name="ColumnStacks"
                 HorizontalAlignment="Center"
                 Opacity="0.9"
                 OpacityMask="White"

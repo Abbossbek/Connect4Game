@@ -1,6 +1,7 @@
 ﻿using Caliburn.Micro;
 using Connect4Game.Models;
 using System.Collections.Generic;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
@@ -26,6 +27,7 @@ namespace Connect4Game.ViewModels
 
         private Connect4Player _player1;
         private Connect4Player _player2;
+        private StackPanel ColumnStacks;
 
         const int winnerPoints = 100;  // player score on win
 
@@ -74,7 +76,25 @@ namespace Connect4Game.ViewModels
 
         private Dictionary<string, int> _gameMapIndexDictionary;
 
+        protected override void OnViewAttached(object view, object context)
+        {
+            base.OnViewAttached(view, context); 
+            var frameworkElement = view as FrameworkElement;
 
+            if (frameworkElement == null)
+            {
+                return;
+            }
+
+            var control = frameworkElement.FindName("ColumnStacks") as StackPanel;
+
+            if (control == null)
+            {
+                return;
+            }
+            else
+                ColumnStacks = control;
+        }
         public GamePlayViewModel(Connect4Player player1, Connect4Player player2)
         {
             _player1 = player1;
@@ -101,16 +121,24 @@ namespace Connect4Game.ViewModels
         {
             if (_canPlay == false)
                 return;
-
+            var colIndex = -1;
+            StackPanel stackContainer;
             var selectedButton = (Button)obj;
-            var stackContainer = (StackPanel)selectedButton.Parent;
-            var colIndex = _gameMapIndexDictionary[stackContainer.Name];
             Play:
-            var rowIndex = stackContainer.Children.IndexOf(selectedButton);
+            if(colIndex == -1)
+            {
+                stackContainer = (StackPanel)selectedButton.Parent;
+                colIndex = _gameMapIndexDictionary[stackContainer.Name];
+            }
+            else
+            {
+                stackContainer = (StackPanel)ColumnStacks.Children[colIndex];
+            }
+            var rowIndex = 0;
             if (_gameMap[rowIndex, colIndex] == 2 || _gameMap[rowIndex, colIndex] == 5)
                 return;
 
-            for (int i = MaxRow - 1; i >= 0; --i)     // check for unfilled in seleceted position
+            for (int i = 0; i <= MaxRow - 1; i++)     // check for unfilled in seleceted position
             {
                 if (_gameMap[i, colIndex] == 0)
                 {
