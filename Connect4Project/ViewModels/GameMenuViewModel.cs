@@ -1,4 +1,7 @@
 ﻿using Caliburn.Micro;
+
+using Connect4Game.Models;
+
 using System.Windows.Input;
 
 namespace Connect4Game.ViewModels
@@ -13,15 +16,13 @@ namespace Connect4Game.ViewModels
             _closeWindow = closeWindow;
         }
 
-        public void PlayGameCommand()
-        {
-            var conductor = this.Parent as IConductor;
-            conductor.ActivateItemAsync(new UserDetailsViewModel());
-        }
         public void SinglePlayer()
         {
             var conductor = this.Parent as IConductor;
-            conductor.ActivateItemAsync(new UserDetailsViewModel());
+            var gamePlayInput = new GamePlayInput("You", "Computer");
+            var player = new HumanPlayer();
+            conductor.ActivateItemAsync(new ChooseColorViewModel(player));
+
         }
 
         public void QuitCommand()
