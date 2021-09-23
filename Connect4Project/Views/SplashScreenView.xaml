@@ -72,15 +72,5 @@
             VerticalAlignment="Center"
             Source="/Connect4Game;component/Images/connect4.ico" />
 
-        <TextBlock
-            Grid.Row="2"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center"
-            FontFamily="{StaticResource LatoBold}"
-            FontSize="40"
-            FontWeight="Bold"
-            Foreground="White"
-            Text="BY: DAVICS" />
-
     </Grid>
 </Window>
