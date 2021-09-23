@@ -15,15 +15,10 @@ namespace Connect4Game.Utils
     {
         private static Dictionary<string, object> settings;
         public static string FilePath = "Data.json";
-        static readonly JsonSerializerOptions options = new JsonSerializerOptions
+        public static void Clear()
         {
-            MaxDepth = int.MaxValue,  
-            Encoder = JavaScriptEncoder.Create(UnicodeRanges.All),
-            WriteIndented = true
-        };
-        public static bool Contains(string str)
-        {
-            return File.ReadAllText(FilePath).Contains(str);
+            if (File.Exists(FilePath))
+                File.Delete(FilePath);
         }
         public static void SetValue(string key, object value)
         {
@@ -57,7 +52,8 @@ namespace Connect4Game.Utils
                         settings = JsonSerializer.Deserialize<Dictionary<string, object>>(data);
                     if (settings.ContainsKey(key))
                     {
-                        return JsonSerializer.Deserialize<T>(JsonSerializer.Serialize(settings[key]));
+                        var json = JsonSerializer.Serialize(settings[key]);
+                        return JsonSerializer.Deserialize<T>(json);
                     }
                     else
                         return default(T);

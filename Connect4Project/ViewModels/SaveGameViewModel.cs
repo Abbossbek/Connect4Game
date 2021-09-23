@@ -27,7 +27,19 @@ namespace Connect4Game.ViewModels
             {
                 list.Add(item);
             }
-            _game = new GameModel() { Player1 = player1, Player2 = player2, GameMap = list};
+            _game = new GameModel() { Player1 = player1, Player2 = player2, GameMap = list };
+            if (player2.GetType() == typeof(EasyAIPlayer))
+            {
+                _game.Depth = 1;
+            }
+            else if (player2.GetType() == typeof(MediumAIPlayer))
+            {
+                _game.Depth = 2;
+            }
+            else if (player2.GetType() == typeof(HardAIPlayer))
+            {
+                _game.Depth = 3;
+            }
             _games = DataHelper.GetValue<List<GameModel>>("games")?? new List<GameModel>();
         }
 

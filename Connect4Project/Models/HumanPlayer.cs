@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Connect4Game.Models
 {
-    class HumanPlayer : Connect4Player
+    public class HumanPlayer : Connect4Player
     {
 
     }

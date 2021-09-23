@@ -4,6 +4,7 @@ using Connect4Game.Models;
 using Connect4Game.Utils;
 
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -11,9 +12,9 @@ namespace Connect4Game.ViewModels
 {
     class LoadGameViewModel : Screen
     {
-        private List<GameModel> _games;
+        private ObservableCollection<GameModel> _games = new();
 
-        public List<GameModel> Games
+        public ObservableCollection<GameModel> Games
         {
             get { return _games; }
             set { _games = value; }
@@ -22,7 +23,11 @@ namespace Connect4Game.ViewModels
 
         public LoadGameViewModel()
         {
-            Games = DataHelper.GetValue<List<GameModel>>("games");
+            var savedGames = DataHelper.GetValue<List<GameModel>>("games")??new();
+            foreach (var item in savedGames)
+            {
+                Games.Add(item);
+            }
         }
 
         public void ItemClicked(object obj)
@@ -30,6 +35,11 @@ namespace Connect4Game.ViewModels
             var selectedItem = (GameModel)((Button)obj).DataContext;
             var conductor = this.Parent as IConductor;
             conductor.ActivateItemAsync(new GamePlayViewModel(selectedItem));
+        }
+        public void Clear()
+        {
+            DataHelper.Clear();
+            Games.Clear();
         }
     }
 }

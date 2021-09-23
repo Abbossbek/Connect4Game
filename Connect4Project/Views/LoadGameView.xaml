@@ -10,6 +10,11 @@
     mc:Ignorable="d">
 
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="90"/>
+        </Grid.RowDefinitions>
+        <Button x:Name="Clear" Content="Clear" Grid.Row="1" Width="400"/>
         <Border
             Padding="30"
             HorizontalAlignment="Center"
@@ -17,18 +22,18 @@
             Background="White"
             CornerRadius="20">
 
-            <ListBox ItemsSource="{Binding Games}"
-                     Width="400"
+            <ListBox ItemsSource="{Binding Games, UpdateSourceTrigger=PropertyChanged}" Style="{x:Null}" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                     Width="400" Height="400" MaxHeight="400" ScrollViewer.VerticalScrollBarVisibility="Auto"
                      cal:Message.Attach="[Event ] = [Action RunOperation($source)]">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <Button HorizontalAlignment="Center" Padding="10"
-                                cal:Message.Attach="[Event Click] = [Action ItemClicked($source)]"
+                        <Button HorizontalAlignment="Center" Padding="10" Width="380"
+                                cal:Message.Attach="[Event Click] = [Action ItemClicked($source)]" HorizontalContentAlignment="Left"
                                  Margin="5" >
-                            <StackPanel>
+                            <StackPanel >
                                 <TextBlock Text="{Binding Name}" FontSize="25"/>
-                                <TextBlock Text="{Binding Player1.Name}" />
-                                <TextBlock Text="{Binding Player2.Name}" />
+                                <TextBlock Text="{Binding Player1.Name, StringFormat='Player 1: {0}'}" FontSize="16"/>
+                                <TextBlock Text="{Binding Player2.Name, StringFormat='Player 2: {0}'}" FontSize="16"/>
                             </StackPanel>
                         </Button>
                     </DataTemplate>

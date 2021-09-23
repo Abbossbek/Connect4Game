@@ -93,7 +93,22 @@ namespace Connect4Game.ViewModels
                 return;
             }
             else
+            {
                 ColumnStacks = control;
+                for (int i = 0; i < ColumnStacks.Children.Count; i++)
+                {
+                    var buttons = ((StackPanel)ColumnStacks.Children[i]).Children;
+                    for (int j = 0; j < buttons.Count; j++)
+                    {
+                        ((Button)buttons[MaxRow - j-1]).Foreground = _gameMap[j, i] switch
+                        {
+                            1 => Player1Color,
+                            2 => Player2Color,
+                            _ => ((Button)buttons[MaxRow - j-1]).Foreground,
+                        };
+                    }
+                }
+            }
         }
         public GamePlayViewModel(Connect4Player player1, Connect4Player player2)
         {
@@ -120,22 +135,15 @@ namespace Connect4Game.ViewModels
         {
             for (int i = 0; i < gameModel.GameMap.Count; i++)
             {
-                _gameMap[i/6,i%7]=gameModel.GameMap[i];
-
+                _gameMap[i/7,i%7]=gameModel.GameMap[i]; // 
             }
-            for (int i = 0; i < ColumnStacks.Children.Count; i++)
+            _player2 = gameModel.Depth switch
             {
-                var buttons = ((StackPanel)ColumnStacks.Children[i]).Children;
-                for (int j = 0; j < buttons.Count; j++)
-                {
-                    ((Button)buttons[j]).Foreground = _gameMap[i, j] switch
-                    {
-                        1 => Player1Color,
-                        2 => Player2Color,
-                        _ => ((Button)buttons[j]).Foreground,
-                    };
-                }
-            }
+                1 => new EasyAIPlayer() { Name = _player2.Name, Color = _player2.Color },
+                2 => new MediumAIPlayer() { Name = _player2.Name, Color = _player2.Color },
+                3 => new HardAIPlayer() { Name = _player2.Name, Color = _player2.Color },
+                _ => _player2
+            };
         }
 
         public void RunOperation(object obj)

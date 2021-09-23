@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Connect4Game.Models
 {
-    internal class EasyAIPlayer:AIPlayer
+    public class EasyAIPlayer:AIPlayer
     {
         public override int bestMove(int[,] board)
         {
