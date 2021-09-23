@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Connect4Game.Models
@@ -17,7 +18,6 @@ namespace Connect4Game.Models
             get => depth;
             set => depth = value;
         }
-
         public virtual int bestMove(int[,] board)
         {
             return collectScores();

@@ -51,6 +51,11 @@ namespace Connect4Game.ViewModels
         {
             if (Items.Count > 1)
             {
+                if (Items[Items.Count - 1].GetType() == typeof(GameMenuViewModel))
+                {
+                    BackHomeCommand();
+                    return;
+                }
                 Items.RemoveAt(Items.Count - 1);
                 if(Items[Items.Count - 1].GetType() == typeof(ChooseColorViewModel))
                     BackOnePage();

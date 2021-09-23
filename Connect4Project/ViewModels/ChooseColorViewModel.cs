@@ -31,7 +31,7 @@ namespace Connect4Game.ViewModels
             var selectedButton = (Button)obj;
             if (currentPlayer == _player1)
             {
-                _player1.Color = selectedButton.Foreground;
+                _player1.Color = selectedButton.Foreground.ToString();
                 if(_player2.Name is null)
                 {
                     _player2.Name = "Computer"; 
@@ -40,12 +40,12 @@ namespace Connect4Game.ViewModels
                         Random r = new Random();
                         switch (r.Next(0,6))
                         {
-                            case 0: _player2.Color = Brushes.Red; break;
-                            case 1: _player2.Color = Brushes.Green; break;
-                            case 2: _player2.Color = Brushes.Blue; break;
-                            case 3: _player2.Color = Brushes.Pink; break;
-                            case 4: _player2.Color = Brushes.Yellow; break;
-                            case 5: _player2.Color = Brushes.Gray; break;
+                            case 0: _player2.Color = Brushes.Red.ToString(); break;
+                            case 1: _player2.Color = Brushes.Green.ToString(); break;
+                            case 2: _player2.Color = Brushes.Blue.ToString(); break;
+                            case 3: _player2.Color = Brushes.Pink.ToString(); break;
+                            case 4: _player2.Color = Brushes.Yellow.ToString(); break;
+                            case 5: _player2.Color = Brushes.Gray.ToString(); break;
                         }
                     } while (_player2.Color == _player1.Color);// Will choose a random colour for the ai making sure it doesn't clash with the users.
                     var conductor = this.Parent as IConductor;
@@ -56,7 +56,7 @@ namespace Connect4Game.ViewModels
             }
             else
             {
-                _player2.Color = selectedButton.Foreground;
+                _player2.Color = selectedButton.Foreground.ToString();
 
                 var conductor = this.Parent as IConductor;
                 await conductor.ActivateItemAsync(new GamePlayViewModel(_player1, _player2));

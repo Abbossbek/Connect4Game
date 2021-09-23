@@ -26,23 +26,15 @@ namespace Connect4Game.ViewModels
             var conductor = this.Parent as IConductor;
             await conductor.ActivateItemAsync(new UserDetailsViewModel());
         }
+        public async void LoadGame()
+        {
+            var conductor = this.Parent as IConductor;
+            await conductor.ActivateItemAsync(new LoadGameViewModel());
+        }
 
         public void QuitCommand()
         {
             _closeWindow?.Invoke();
         }
-
-        public void LeaderBoard()
-        {
-            var conductor = this.Parent as IConductor;
-            conductor.ActivateItemAsync(new LeaderBoardViewModel());
-        }
-
-        public void Register()
-        {
-            var conductor = this.Parent as IConductor;
-            conductor.ActivateItemAsync(new RegisterViewModel());
-        }
-
     }
 }

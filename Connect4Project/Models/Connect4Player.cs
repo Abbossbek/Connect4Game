@@ -10,7 +10,7 @@ namespace Connect4Game.Models
     public abstract class Connect4Player
     {
         public string Name { get; set; }
-        public Brush Color { get; set; }
+        public string Color { get; set; }
 
         public int Move(int col, int[,] board)
         {

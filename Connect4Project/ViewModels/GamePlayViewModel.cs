@@ -47,11 +47,11 @@ namespace Connect4Game.ViewModels
 
         public Brush Player1Color
         {
-            get => _player1?.Color;
+            get => (Brush)new BrushConverter().ConvertFromString(_player1?.Color);
         }
         public Brush Player2Color
         {
-            get => _player2?.Color;
+            get => (Brush)new BrushConverter().ConvertFromString(_player2?.Color);
         }
         public string Player1Name
         {
@@ -116,6 +116,27 @@ namespace Connect4Game.ViewModels
 
 
         }
+        public GamePlayViewModel(GameModel gameModel):this(gameModel.Player1, gameModel.Player2)
+        {
+            for (int i = 0; i < gameModel.GameMap.Count; i++)
+            {
+                _gameMap[i/6,i%7]=gameModel.GameMap[i];
+
+            }
+            for (int i = 0; i < ColumnStacks.Children.Count; i++)
+            {
+                var buttons = ((StackPanel)ColumnStacks.Children[i]).Children;
+                for (int j = 0; j < buttons.Count; j++)
+                {
+                    ((Button)buttons[j]).Foreground = _gameMap[i, j] switch
+                    {
+                        1 => Player1Color,
+                        2 => Player2Color,
+                        _ => ((Button)buttons[j]).Foreground,
+                    };
+                }
+            }
+        }
 
         public void RunOperation(object obj)
         {
@@ -146,7 +167,7 @@ namespace Connect4Game.ViewModels
 
                     if (_switchPlayers == true)
                     {
-                        calButton.Foreground = _player1.Color;
+                        calButton.Foreground = (Brush)new BrushConverter().ConvertFromString(_player1.Color);
                         _gameMap[i, colIndex] = 1;
                         var result = checkWin(1, stackContainer);
                         if (result)
@@ -160,7 +181,7 @@ namespace Connect4Game.ViewModels
 
                     else if (_switchPlayers == false)
                     {
-                        calButton.Foreground = _player2.Color;
+                        calButton.Foreground = (Brush)new BrushConverter().ConvertFromString(_player2.Color);
                         _gameMap[i, colIndex] = 2;
                         var result = checkWin(2, stackContainer);
                         if (result)
@@ -200,6 +221,11 @@ namespace Connect4Game.ViewModels
             }
         }
 
+        public void SaveGame()
+        {
+            var conductor = this.Parent as IConductor;
+            conductor.ActivateItemAsync(new SaveGameViewModel(_player1, _player2, _gameMap));
+        }
 
         private bool checkWin(int player, StackPanel container)
         {
