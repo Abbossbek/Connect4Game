@@ -7,7 +7,6 @@ namespace Connect4Game.ViewModels
 {
     public class UserDetailsViewModel : Screen
     {
-
         private string _player1 { get; set; }
         public string Player1
         {
@@ -17,7 +16,6 @@ namespace Connect4Game.ViewModels
                 _player1 = value;
             }
         }
-
         private string _player2 { get; set; }
         public string Player2
         {
@@ -27,12 +25,9 @@ namespace Connect4Game.ViewModels
                 _player2 = value;
             }
         }
-
-
         public UserDetailsViewModel()
         {
         }
-
         public bool CanPlayGameCommand(string player1, string player2)
         {
             if (string.IsNullOrEmpty(player1) || string.IsNullOrEmpty(player2) || player1 == player2)
@@ -40,12 +35,10 @@ namespace Connect4Game.ViewModels
 
             return true;
         }
-
         public void PlayGameCommand(string player1, string player2)
         {
             var conductor = this.Parent as IConductor;
-            conductor.ActivateItemAsync( new ChooseColorViewModel(new HumanPlayer() { Name = player1}, new HumanPlayer() { Name = player2}));
-
+            conductor.ActivateItemAsync( new ChooseColorViewModel(new Connect4Player() { Name = player1}, new Connect4Player() { Name = player2}));
         }
     }
 }
