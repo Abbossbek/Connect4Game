@@ -10,7 +10,7 @@ namespace Connect4Game.Models
     {
         public override int bestMove(int[,] board)
         {
-            root = new TreeNode(board, 2); // creates the tree storing moves with the root being the board with no move
+            root = new TreeNode(board, 2, 1, 2); // creates the tree storing moves with the root being the board with no move
             return base.bestMove(board);
         }
     }
