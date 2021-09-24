@@ -1,5 +1,7 @@
 ﻿using Caliburn.Micro;
+
 using Connect4Game.Models;
+
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
@@ -28,6 +30,7 @@ namespace Connect4Game.ViewModels
         private Connect4Player _player1;
         private Connect4Player _player2;
         private StackPanel ColumnStacks;
+        private Stack<GameStep> _steps;
 
         const int winnerPoints = 100;  // player score on win
 
@@ -42,9 +45,9 @@ namespace Connect4Game.ViewModels
                                                      {0, 0, 0, 0,0,0,0 }
                                                    };
 
-        private bool? _switchPlayers { get; set; }
+        private bool _switchPlayers { get; set; }
         private bool _canPlay { get; set; } = true;
-
+        public bool CanUndo => _steps.Count > 0 && _canPlay;
         public Brush Player1Color
         {
             get => (Brush)new BrushConverter().ConvertFromString(_player1?.Color);
@@ -78,7 +81,7 @@ namespace Connect4Game.ViewModels
 
         protected override void OnViewAttached(object view, object context)
         {
-            base.OnViewAttached(view, context); 
+            base.OnViewAttached(view, context);
             var frameworkElement = view as FrameworkElement;
 
             if (frameworkElement == null)
@@ -100,11 +103,11 @@ namespace Connect4Game.ViewModels
                     var buttons = ((StackPanel)ColumnStacks.Children[i]).Children;
                     for (int j = 0; j < buttons.Count; j++)
                     {
-                        ((Button)buttons[MaxRow - j-1]).Foreground = _gameMap[j, i] switch
+                        ((Button)buttons[MaxRow - j - 1]).Foreground = _gameMap[j, i] switch
                         {
                             1 => Player1Color,
                             2 => Player2Color,
-                            _ => ((Button)buttons[MaxRow - j-1]).Foreground,
+                            _ => ((Button)buttons[MaxRow - j - 1]).Foreground,
                         };
                     }
                 }
@@ -126,16 +129,15 @@ namespace Connect4Game.ViewModels
             _gameMapIndexDictionary.Add("col6", 5);
             _gameMapIndexDictionary.Add("col7", 6);
 
-            GameState = Player1Name + (Player1Name is "You"?"r Turn": "'s Turn");
+            GameState = Player1Name + (Player1Name is "You" ? "r Turn" : "'s Turn");
             _canPlay = true;
-
-
+            _steps = new();
         }
-        public GamePlayViewModel(GameModel gameModel):this(gameModel.Player1, gameModel.Player2)
+        public GamePlayViewModel(GameModel gameModel) : this(gameModel.Player1, gameModel.Player2)
         {
             for (int i = 0; i < gameModel.GameMap.Count; i++)
             {
-                _gameMap[i/7,i%7]=gameModel.GameMap[i]; // 
+                _gameMap[i / 7, i % 7] = gameModel.GameMap[i]; // 
             }
             _player2 = gameModel.Depth switch
             {
@@ -153,8 +155,8 @@ namespace Connect4Game.ViewModels
             var colIndex = -1;
             StackPanel stackContainer;
             var selectedButton = (Button)obj;
-            Play:
-            if(colIndex == -1)
+        Play:
+            if (colIndex == -1)
             {
                 stackContainer = (StackPanel)selectedButton.Parent;
                 colIndex = _gameMapIndexDictionary[stackContainer.Name];
@@ -171,9 +173,9 @@ namespace Connect4Game.ViewModels
             {
                 if (_gameMap[i, colIndex] == 0)
                 {
-                    var calButton = (Button)stackContainer.Children[MaxRow - i -1];
+                    var calButton = (Button)stackContainer.Children[MaxRow - i - 1];
 
-                    if (_switchPlayers == true)
+                    if (_switchPlayers)
                     {
                         calButton.Foreground = (Brush)new BrushConverter().ConvertFromString(_player1.Color);
                         _gameMap[i, colIndex] = 1;
@@ -186,8 +188,7 @@ namespace Connect4Game.ViewModels
                             windowManager.ShowDialogAsync(new CustomAlertViewModel($"{Player1Name} Won!"));
                         }
                     }
-
-                    else if (_switchPlayers == false)
+                    else
                     {
                         calButton.Foreground = (Brush)new BrushConverter().ConvertFromString(_player2.Color);
                         _gameMap[i, colIndex] = 2;
@@ -201,38 +202,61 @@ namespace Connect4Game.ViewModels
                         }
                     }
 
+                    _steps.Push(new() { Player = _switchPlayers ? _player1 : _player2, X = i, Y = colIndex });
+                    NotifyOfPropertyChange(nameof(CanUndo));
                     break;
                 }
             }
 
             _switchPlayers = !_switchPlayers;
 
-            if (_switchPlayers == true && _canPlay)
+            if (_switchPlayers && _canPlay)
                 GameState = Player1Name + (Player1Name is "You" ? "r Turn" : "'s Turn");
 
             else if (_switchPlayers == false && _canPlay)
             {
-                if(_player2.GetType() == typeof(EasyAIPlayer))
+                if (_player2.GetType() == typeof(EasyAIPlayer))
                 {
                     colIndex = ((EasyAIPlayer)_player2).bestMove(_gameMap);
                     goto Play;
-                }else if (_player2.GetType() == typeof(MediumAIPlayer))
+                }
+                else if (_player2.GetType() == typeof(MediumAIPlayer))
                 {
                     colIndex = ((MediumAIPlayer)_player2).bestMove(_gameMap);
                     goto Play;
-                }else if (_player2.GetType() == typeof(HardAIPlayer))
+                }
+                else if (_player2.GetType() == typeof(HardAIPlayer))
                 {
                     colIndex = ((HardAIPlayer)_player2).bestMove(_gameMap);
                     goto Play;
                 }
-                    GameState = $"{Player2Name}'s Turn";
+                GameState = $"{Player2Name}'s Turn";
             }
+
         }
 
         public void SaveGame()
         {
             var conductor = this.Parent as IConductor;
             conductor.ActivateItemAsync(new SaveGameViewModel(_player1, _player2, _gameMap));
+        }
+
+        public void Undo()
+        {
+            var lastStep = _steps.Pop();
+            var buttonsStack = ColumnStacks.Children[lastStep.Y];
+            ((Button)((StackPanel)buttonsStack).Children[MaxRow - lastStep.X - 1]).Foreground = Brushes.White;
+            _gameMap[lastStep.X, lastStep.Y] = 0;
+            if (lastStep.Player.Name is "Computer")
+            {
+                Undo();
+            }
+            else
+            {
+                _switchPlayers = lastStep.Player.Name == _player1.Name;
+                GameState = (_switchPlayers ? Player1Name : Player2Name) + (_switchPlayers && Player1Name is "You" ? "r Turn" : "'s Turn");
+            }
+            NotifyOfPropertyChange(nameof(CanUndo));
         }
 
         private bool checkWin(int player, StackPanel container)
@@ -256,7 +280,7 @@ namespace Connect4Game.ViewModels
                     if (_gameMap[i, j] == player)
                     {
                         ++count;
-                        points.Add(new Field(MaxRow-i-1, j));
+                        points.Add(new Field(MaxRow - i - 1, j));
                         if (count == 4) break;
                     }
 
@@ -304,7 +328,7 @@ namespace Connect4Game.ViewModels
                     if (_gameMap[j, i] == player)
                     {
                         ++count;
-                        points.Add(new Field(MaxRow - j-1, i));
+                        points.Add(new Field(MaxRow - j - 1, i));
                         if (count == 4) break;
                     }
 
