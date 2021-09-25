@@ -8,10 +8,9 @@ namespace Connect4Game.Models
 {
     public class EasyAIPlayer:AIPlayer
     {
-        public override int bestMove(int[,] board)
+        public EasyAIPlayer():base(DifficultyLevel.Easy)
         {
-            root = new TreeNode(board, 2,1,1); // creates the tree storing moves with the root being the board with no move
-            return base.bestMove(board);
+
         }
     }
 }

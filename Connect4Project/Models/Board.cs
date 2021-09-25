@@ -1,77 +1,135 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Diagnostics;
 using System.Text;
-using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace Connect4Game.Models
 {
     public class Board
     {
-        private int[,] _board = new int[_boardHeight, _boardWidth];// this is the representation of the board encapsulated as needs to be used by form.
-        public int[,] Board1
-        {
-            get { return _board; }
-            set { _board = value; }
-        }
-        private const int _boardHeight = 6;
-        private const int _boardWidth = 7;
+        public static readonly Board EmptyBoard = new Board();
 
-        public bool checkWin(int col, int row, int counterColour)// Will check all the possible ways a 4 in a row could be achieved and if one or more is true then true will be returned.
-        {
-            if (fourInRow(_board, row, col, counterColour, 1, 0) | fourInRow(_board, row, col, counterColour, -1, 1) | fourInRow(_board, row, col, counterColour, 1, -1) | fourInRow(_board, row, col, counterColour, -1, -1) | fourInRow(_board, row, col, counterColour, 0, 1) | fourInRow(_board, row, col, counterColour, 1, 1))
-            {
-                return true;
-            }
-            return false;
-        }
+        private readonly CellStates[,] cells;
+        private readonly int numberOfEmptyCells;
 
-        public static bool checkWin(int col, int row, int counterColour, int[,] board)// This needs to be accessed by the ai when board isn't encapsulated so needs to bew made static.
-        {
-            if (fourInRow(board, row, col, counterColour, 1, 0) | fourInRow(board, row, col, counterColour, -1, 1) | fourInRow(board, row, col, counterColour, 1, -1) | fourInRow(board, row, col, counterColour, -1, -1) | fourInRow(board, row, col, counterColour, 0, 1) | fourInRow(board, row, col, counterColour, 1, 1))
-            {
-                return true;
-            }
-            return false;
-        }
+        private int rowIndex;
+        private int colIndex;
 
-        public bool boardFull()// Checks if the board is full by checking all the top row seeing if any are empty and if so then board isn't full. 
+        private Board()
         {
-            for (int i = 0; i < 7; i++)
+            cells = new CellStates[BoardUtils.ROWS, BoardUtils.COLS];
+            numberOfEmptyCells = BoardUtils.ROWS * BoardUtils.COLS;
+        }
+        public Board(int[,] matrix)
+        {
+            cells = new CellStates[BoardUtils.ROWS, BoardUtils.COLS];
+            numberOfEmptyCells = BoardUtils.ROWS * BoardUtils.COLS;
+            for (int i = 0; i < BoardUtils.ROWS; i++)
             {
-                if (_board[5, i] == 0)
+                for (int j = 0; j < BoardUtils.COLS; j++)
                 {
-                    return false;
+                    cells[i, j] = matrix[i, j] switch
+                    {
+                        0 => CellStates.EMPTY,
+                        1 => CellStates.FIRST,
+                        2 => CellStates.SECOND
+                    };
                 }
             }
-            return true;
         }
 
-        public static bool fourInRow(int[,] board, int row, int col, int counterNum, int y, int x)// Is passed x and y to determine the direction each check will make and each turn all relevant combinations will be passed to check all possible four connecting counters.
+        private Board(Board board, int numberOfEmptyCells)
         {
-            int count = 1;
-            while (row - y >= 0 && row - y < 6 && col - x >= 0 && col - x < 7 && board[row - y, col - x] == counterNum)// Will shift as many possible to the left so if the counter is placed in the middle will still work out if four in a row.
+            if (board == null)
+                throw new ArgumentNullException("board");
+
+            if (numberOfEmptyCells < 0 || numberOfEmptyCells > BoardUtils.ROWS * BoardUtils.COLS)
+                throw new ArgumentOutOfRangeException("numberOfEmptyCells");
+
+            cells = new CellStates[BoardUtils.ROWS, BoardUtils.COLS];
+
+            if (board != null)
             {
-                row -= y;
-                col -= x;
+                for (int i = 0; i < BoardUtils.ROWS; i++)
+                {
+                    for (int j = 0; j < BoardUtils.COLS; j++)
+                    {
+                        cells[i, j] = board.cells[i, j];
+                    }
+                }
             }
-            while (row + y >= 0 && row + y < 6 && col + x >= 0 && col + x < 7 && board[row + y, col + x] == counterNum)// Will then shift back as many depending on the direction to check whether there are four counters.
-            {
-                row += y;
-                col += x;
-                count++;
-            }
-            if (count >= 4)// If there was 4 counters in a line then true will be returned.
-            {
-                return true;
-            }
-            return false;
+
+            this.rowIndex = 0;
+            this.colIndex = 0;
+            this.numberOfEmptyCells = numberOfEmptyCells;
         }
-        //public void changeUser(User u1, User u2)// Changes the user by changing the current user variable indise each user. 
-        //{
-        //    u1.CurrentUser = !u1.CurrentUser;
-        //    u2.CurrentUser = !u2.CurrentUser;
-        //}
+
+        public int NumberOfEmptyCells
+        {
+            get
+            {
+                return numberOfEmptyCells;
+            }
+        }
+
+        public int GetRowIndex()
+        {
+            return this.rowIndex;
+        }
+
+        public int GetColIndex()
+        {
+            return this.colIndex;
+        }
+
+        public CellStates GetCellState(int row, int column)
+        {
+            if (row < 0 || row >= BoardUtils.ROWS)
+                throw new ArgumentOutOfRangeException("row");
+
+            if (column < 0 || column >= BoardUtils.COLS) throw new ArgumentOutOfRangeException("column");
+
+            return cells[row, column];
+        }
+
+        /// <summary>
+        /// This modifies <see cref="board"/>, <see cref="cells"/>, <see cref="rowIndex"/>, and <see cref="colIndex"/> if move is valid.
+        /// </summary>
+        /// <param name="player"></param>
+        /// <param name="column"></param>
+        /// <param name="board"></param>
+        /// <returns>Returns true if move is successful.</returns>
+        public bool MakeMove(ActivePlayer player, int column, out Board board)
+        {
+            if (column < 0 || column > BoardUtils.COLS - 1)
+            {
+                board = this;
+                return false;
+            }
+                
+            // Checks if column is occupied
+            if (cells[0, column] != CellStates.EMPTY)
+            {
+                board = this;
+                return false;
+            }
+
+            board = new Board(this, numberOfEmptyCells - 1);
+
+            int i;
+
+            for (i = BoardUtils.ROWS - 1; i > -1; i--)
+            {
+                if (cells[i, column] == CellStates.EMPTY)
+                    break;
+            }
+
+            board.rowIndex = i;
+            board.colIndex = column;
+            board.cells[i, column] = (CellStates)player;
+            //MessageBox.Show("Board: " + i + ", " + column);
+            return true;
+        }
 
     }
 }

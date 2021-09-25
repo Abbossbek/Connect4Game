@@ -11,6 +11,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Models\TreeNode.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Fonts\IndieFlower-Regular.ttf" />
     <None Remove="Fonts\Lato-Bold.ttf" />
     <None Remove="Fonts\Lato-Light.ttf" />

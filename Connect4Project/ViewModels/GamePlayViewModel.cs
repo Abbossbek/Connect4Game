@@ -32,8 +32,6 @@ namespace Connect4Game.ViewModels
         private StackPanel ColumnStacks;
         private Stack<GameStep> _steps;
 
-        const int winnerPoints = 100;  // player score on win
-
         private const int MaxRow = 6;
         private const int MaxColumn = 7;
         private int[,] _gameMap = new int[MaxRow, MaxColumn] {
@@ -103,11 +101,11 @@ namespace Connect4Game.ViewModels
                     var buttons = ((StackPanel)ColumnStacks.Children[i]).Children;
                     for (int j = 0; j < buttons.Count; j++)
                     {
-                        ((Button)buttons[MaxRow - j - 1]).Foreground = _gameMap[j, i] switch
+                        ((Button)buttons[j]).Foreground = _gameMap[j, i] switch
                         {
                             1 => Player1Color,
                             2 => Player2Color,
-                            _ => ((Button)buttons[MaxRow - j - 1]).Foreground,
+                            _ => ((Button)buttons[j]).Foreground,
                         };
                     }
                 }
@@ -171,14 +169,14 @@ namespace Connect4Game.ViewModels
 
             for (int i = 0; i < MaxRow; i++)     // check for unfilled in seleceted position
             {
-                if (_gameMap[i, colIndex] == 0)
+                if (_gameMap[MaxRow - i - 1, colIndex] == 0)
                 {
                     var calButton = (Button)stackContainer.Children[MaxRow - i - 1];
 
                     if (_switchPlayers)
                     {
                         calButton.Foreground = (Brush)new BrushConverter().ConvertFromString(_player1.Color);
-                        _gameMap[i, colIndex] = 1;
+                        _gameMap[MaxRow - i - 1, colIndex] = 1;
                         var result = checkWin(1, stackContainer);
                         if (result)
                         {
@@ -191,7 +189,7 @@ namespace Connect4Game.ViewModels
                     else
                     {
                         calButton.Foreground = (Brush)new BrushConverter().ConvertFromString(_player2.Color);
-                        _gameMap[i, colIndex] = 2;
+                        _gameMap[MaxRow - i - 1, colIndex] = 2;
                         var result = checkWin(2, stackContainer);
                         if (result)
                         {
@@ -217,17 +215,17 @@ namespace Connect4Game.ViewModels
             {
                 if (_player2.GetType() == typeof(EasyAIPlayer))
                 {
-                    colIndex = ((EasyAIPlayer)_player2).bestMove(_gameMap);
+                    colIndex = ((EasyAIPlayer)_player2).GetBestMove(_gameMap, ActivePlayer.SECOND);
                     goto Play;
                 }
                 else if (_player2.GetType() == typeof(MediumAIPlayer))
                 {
-                    colIndex = ((MediumAIPlayer)_player2).bestMove(_gameMap);
+                    colIndex = ((MediumAIPlayer)_player2).GetBestMove(_gameMap, ActivePlayer.SECOND);
                     goto Play;
                 }
                 else if (_player2.GetType() == typeof(HardAIPlayer))
                 {
-                    colIndex = ((HardAIPlayer)_player2).bestMove(_gameMap);
+                    colIndex = ((HardAIPlayer)_player2).GetBestMove(_gameMap, ActivePlayer.SECOND);
                     goto Play;
                 }
                 GameState = $"{Player2Name}'s Turn";
@@ -246,7 +244,7 @@ namespace Connect4Game.ViewModels
             var lastStep = _steps.Pop();
             var buttonsStack = ColumnStacks.Children[lastStep.Y];
             ((Button)((StackPanel)buttonsStack).Children[MaxRow - lastStep.X - 1]).Foreground = Brushes.White;
-            _gameMap[lastStep.X, lastStep.Y] = 0;
+            _gameMap[MaxRow - lastStep.X - 1, lastStep.Y] = 0;
             if (lastStep.Player.Name is "Computer")
             {
                 Undo();
@@ -277,14 +275,14 @@ namespace Connect4Game.ViewModels
 
                 for (int j = 0; j < MaxColumn; ++j)
                 {
-                    if (_gameMap[i, j] == player)
+                    if (_gameMap[MaxRow - i - 1, j] == player)
                     {
                         ++count;
                         points.Add(new Field(MaxRow - i - 1, j));
                         if (count == 4) break;
                     }
 
-                    else if (_gameMap[i, j] != player)
+                    else if (_gameMap[MaxRow - i - 1, j] != player)
                     {
                         count = 0;
                         points.Clear();
@@ -328,7 +326,7 @@ namespace Connect4Game.ViewModels
                     if (_gameMap[j, i] == player)
                     {
                         ++count;
-                        points.Add(new Field(MaxRow - j - 1, i));
+                        points.Add(new Field(j, i));
                         if (count == 4) break;
                     }
 
@@ -385,7 +383,7 @@ namespace Connect4Game.ViewModels
                     {
                         if (i == -1)
                             break;
-                        if (_gameMap[i, j] == player)
+                        if (_gameMap[MaxRow - i - 1, j] == player)
                         {
                             points.Add(new Field(MaxRow - i - 1, j));
                             ++count;
@@ -393,7 +391,7 @@ namespace Connect4Game.ViewModels
                                 break;
                         }
 
-                        else if (_gameMap[i, j] != player)
+                        else if (_gameMap[MaxRow - i - 1, j] != player)
                         {
                             count = 0;
                             points.Clear();
@@ -450,7 +448,7 @@ namespace Connect4Game.ViewModels
                     {
                         if (i == -1)
                             break;
-                        if (_gameMap[i, j] == player)
+                        if (_gameMap[MaxRow - i - 1, j] == player)
                         {
                             points.Add(new Field(MaxRow - i - 1, j));
                             ++count;
@@ -458,7 +456,7 @@ namespace Connect4Game.ViewModels
                                 break;
                         }
 
-                        else if (_gameMap[i, j] != player)
+                        else if (_gameMap[MaxRow - i - 1, j] != player)
                         {
                             count = 0;
                             points.Clear();
