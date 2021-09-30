@@ -6,18 +6,18 @@ using System.Threading.Tasks;
 
 namespace Connect4Game.Models
 {
-   public class AIPlayer : Player
+    public class AIPlayer : Player
     {
-        public DifficultyLevel Lavel { get; set; }
+        public DifficultyLevel Lavel { get; private set; }
         readonly Random random;
 
         /// <summary>
         /// This instantiates <see cref="Lavel"/> based from <see cref="Form1.difficultyLevel"/>.
         /// </summary>
         /// <param name="difficultyLevel"></param>
-        public AIPlayer(DifficultyLevel difficultyLevel)
+        public AIPlayer(string name, DifficultyLevel difficultyLevel) : base(name)
         {
-            this.Lavel = difficultyLevel;
+            Lavel = difficultyLevel;
 
             if (Lavel < DifficultyLevel.Easy ||
                 Lavel > DifficultyLevel.Hard)
@@ -32,7 +32,7 @@ namespace Connect4Game.Models
         /// <param name="board"></param>
         /// <param name="player"></param>
         /// <returns></returns>
-        public override int MakeMove(int[,] boardM)
+        public override int Move(int[,] boardM)
         {
             var board = new Board(boardM);
             var node = new Node(board);

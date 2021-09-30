@@ -133,9 +133,9 @@ namespace Connect4Game.ViewModels
         }
         public GamePlayViewModel(GameModel gameModel) 
             : this(
-                  new HumanPlayer() { Name = gameModel.Player1, Color = gameModel.Player1Color },
-                  gameModel.Depth > 0 ? new AIPlayer((DifficultyLevel)gameModel.Depth) { Name = gameModel.Player2, Color = gameModel.Player2Color }
-                  : new HumanPlayer() { Name = gameModel.Player1, Color = gameModel.Player1Color })
+                  new HumanPlayer(gameModel.Player1) { Color = gameModel.Player1Color },
+                  gameModel.Depth > 0 ? new AIPlayer(gameModel.Player2, (DifficultyLevel)gameModel.Depth) { Color = gameModel.Player2Color }
+                  : new HumanPlayer(gameModel.Player1) { Color = gameModel.Player1Color })
         {
             for (int i = 0; i < gameModel.GameMap.Count; i++)
             {
@@ -212,7 +212,7 @@ namespace Connect4Game.ViewModels
             {
                 if (_player2.GetType() == typeof(AIPlayer))
                 {
-                    colIndex = ((AIPlayer)_player2).MakeMove(_gameMap);
+                    colIndex = ((AIPlayer)_player2).Move(_gameMap);
                     goto Play;
                 }
                 GameState = $"{Player2Name}'s Turn";

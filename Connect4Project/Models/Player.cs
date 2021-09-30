@@ -10,8 +10,12 @@ namespace Connect4Game.Models
 {
     public abstract class Player
     {
-        public string Name { get; set; }
+        public string Name { get; private set; }
         public string Color { get; set; }
-        public virtual int MakeMove(int[,] boardM) { return -1; }
+        public Player(string name)
+        {
+            Name = name;
+        }
+        public virtual int Move(int[,] boardM) { return -1; }
     }
 }

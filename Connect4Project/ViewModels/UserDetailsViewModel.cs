@@ -38,7 +38,7 @@ namespace Connect4Game.ViewModels
         public void PlayGameCommand(string player1, string player2)
         {
             var conductor = this.Parent as IConductor;
-            conductor.ActivateItemAsync( new ChooseColorViewModel(new HumanPlayer() { Name = player1}, new HumanPlayer() { Name = player2}));
+            conductor.ActivateItemAsync( new ChooseColorViewModel(new HumanPlayer(player1), new HumanPlayer(player2)));
         }
     }
 }

@@ -8,7 +8,7 @@ namespace Connect4Game.Models
 {
     public class HumanPlayer:Player
     {
-        public HumanPlayer()
+        public HumanPlayer(string name):base(name)
         {
 
         }

@@ -29,12 +29,12 @@ namespace Connect4Game.ViewModels
         public async void SelectColor(object obj)
         {
             var selectedButton = (Button)obj;
+            selectedButton.Visibility = System.Windows.Visibility.Collapsed;
             if (currentPlayer == _player1)
             {
                 _player1.Color = selectedButton.Foreground.ToString();
-                if(_player2.Name is null)
+                if(_player2.Name is "Computer")
                 {
-                    _player2.Name = "Computer"; 
                     do
                     {
                         Random r = new Random();
