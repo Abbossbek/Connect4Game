@@ -10,26 +10,26 @@ namespace Connect4Game.ViewModels
 {
     class ChooseDifficultyViewModel : Screen
     {
-        private Connect4Player player;
+        private Player player;
         public ChooseDifficultyViewModel()
         {
-            player = new Connect4Player() { Name = "You" };
+            player = new HumanPlayer() { Name = "You" };
         }
 
         public void Easy()
         {
             var conductor = this.Parent as IConductor;
-            conductor.ActivateItemAsync(new ChooseColorViewModel(player, new EasyAIPlayer()));
+            conductor.ActivateItemAsync(new ChooseColorViewModel(player, new AIPlayer(DifficultyLevel.Easy)));
         }
         public void Medium()
         {
             var conductor = this.Parent as IConductor;
-            conductor.ActivateItemAsync(new ChooseColorViewModel(player, new MediumAIPlayer()));
+            conductor.ActivateItemAsync(new ChooseColorViewModel(player, new AIPlayer(DifficultyLevel.Normal)));
         }
         public void Hard()
         {
             var conductor = this.Parent as IConductor;
-            conductor.ActivateItemAsync(new ChooseColorViewModel(player, new HardAIPlayer()));
+            conductor.ActivateItemAsync(new ChooseColorViewModel(player, new AIPlayer(DifficultyLevel.Hard)));
         }
     }
 }

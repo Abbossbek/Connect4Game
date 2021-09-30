@@ -8,9 +8,10 @@ using System.Windows.Media;
 
 namespace Connect4Game.Models
 {
-    public class Connect4Player
+    public abstract class Player
     {
         public string Name { get; set; }
         public string Color { get; set; }
+        public virtual int MakeMove(int[,] boardM) { return -1; }
     }
 }

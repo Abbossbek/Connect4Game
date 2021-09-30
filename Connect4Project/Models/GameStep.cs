@@ -10,6 +10,6 @@ namespace Connect4Game.Models
     {
         public int X { get; set; }
         public int Y { get; set; }
-        public Connect4Player Player { get; set; }
+        public Player Player { get; set; }
     }
 }

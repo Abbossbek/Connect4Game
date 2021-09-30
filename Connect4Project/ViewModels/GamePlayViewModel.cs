@@ -27,8 +27,8 @@ namespace Connect4Game.ViewModels
     public class GamePlayViewModel : Screen
     {
 
-        private Connect4Player _player1;
-        private Connect4Player _player2;
+        private Player _player1;
+        private Player _player2;
         private StackPanel ColumnStacks;
         private Stack<GameStep> _steps;
 
@@ -111,7 +111,7 @@ namespace Connect4Game.ViewModels
                 }
             }
         }
-        public GamePlayViewModel(Connect4Player player1, Connect4Player player2)
+        public GamePlayViewModel(Player player1, Player player2)
         {
             _player1 = player1;
             _player2 = player2;
@@ -139,9 +139,9 @@ namespace Connect4Game.ViewModels
             }
             _player2 = gameModel.Depth switch
             {
-                1 => new EasyAIPlayer() { Name = _player2.Name, Color = _player2.Color },
-                2 => new MediumAIPlayer() { Name = _player2.Name, Color = _player2.Color },
-                3 => new HardAIPlayer() { Name = _player2.Name, Color = _player2.Color },
+                1 => new AIPlayer(DifficultyLevel.Easy) { Name = _player2.Name, Color = _player2.Color },
+                2 => new AIPlayer(DifficultyLevel.Normal) { Name = _player2.Name, Color = _player2.Color },
+                3 => new AIPlayer(DifficultyLevel.Hard) { Name = _player2.Name, Color = _player2.Color },
                 _ => _player2
             };
         }
@@ -213,19 +213,9 @@ namespace Connect4Game.ViewModels
 
             else if (_switchPlayers == false && _canPlay)
             {
-                if (_player2.GetType() == typeof(EasyAIPlayer))
+                if (_player2.GetType() == typeof(AIPlayer))
                 {
-                    colIndex = ((EasyAIPlayer)_player2).GetBestMove(_gameMap, ActivePlayer.SECOND);
-                    goto Play;
-                }
-                else if (_player2.GetType() == typeof(MediumAIPlayer))
-                {
-                    colIndex = ((MediumAIPlayer)_player2).GetBestMove(_gameMap, ActivePlayer.SECOND);
-                    goto Play;
-                }
-                else if (_player2.GetType() == typeof(HardAIPlayer))
-                {
-                    colIndex = ((HardAIPlayer)_player2).GetBestMove(_gameMap, ActivePlayer.SECOND);
+                    colIndex = ((AIPlayer)_player2).MakeMove(_gameMap);
                     goto Play;
                 }
                 GameState = $"{Player2Name}'s Turn";

@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Connect4Game.Models
 {
-    public class HardAIPlayer:AIPlayer
+    public class HumanPlayer:Player
     {
-        public HardAIPlayer():base(DifficultyLevel.Hard)
+        public HumanPlayer()
         {
 
         }

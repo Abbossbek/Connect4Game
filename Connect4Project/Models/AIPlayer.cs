@@ -6,21 +6,21 @@ using System.Threading.Tasks;
 
 namespace Connect4Game.Models
 {
-   public abstract class AIPlayer : Connect4Player
+   public class AIPlayer : Player
     {
-        readonly int maximumDepth;
+        public DifficultyLevel Lavel { get; set; }
         readonly Random random;
 
         /// <summary>
-        /// This instantiates <see cref="maximumDepth"/> based from <see cref="Form1.difficultyLevel"/>.
+        /// This instantiates <see cref="Lavel"/> based from <see cref="Form1.difficultyLevel"/>.
         /// </summary>
         /// <param name="difficultyLevel"></param>
         public AIPlayer(DifficultyLevel difficultyLevel)
         {
-            this.maximumDepth = (int)difficultyLevel;
+            this.Lavel = difficultyLevel;
 
-            if (maximumDepth < (int)DifficultyLevel.Easy ||
-                maximumDepth > (int)DifficultyLevel.Hard)
+            if (Lavel < DifficultyLevel.Easy ||
+                Lavel > DifficultyLevel.Hard)
                 throw new ArgumentOutOfRangeException("difficultyLevel");
 
             this.random = new Random(DateTime.Now.Millisecond);
@@ -32,7 +32,7 @@ namespace Connect4Game.Models
         /// <param name="board"></param>
         /// <param name="player"></param>
         /// <returns></returns>
-        public int GetBestMove(int[,] boardM, ActivePlayer player)
+        public override int MakeMove(int[,] boardM)
         {
             var board = new Board(boardM);
             var node = new Node(board);
@@ -42,10 +42,10 @@ namespace Connect4Game.Models
 
             for (int i = 0; i < possibleMoves.Count; i++)
             {
-                board.MakeMove(player, possibleMoves[i], out updatedBoard);
+                board.MakeMove(ActivePlayer.SECOND, possibleMoves[i], out updatedBoard);
                 var variant = new Node(updatedBoard);
-                createTree(getOpponent(player), variant, 0);
-                scores[i] = scoreNode(variant, player, 0);
+                createTree(getOpponent(ActivePlayer.SECOND), variant, 0);
+                scores[i] = scoreNode(variant, ActivePlayer.SECOND, 0);
             }
 
             double maximumScore = double.MinValue;
@@ -90,14 +90,14 @@ namespace Connect4Game.Models
 
         /// <summary>
         /// This creates a recursive tree based from Minimax Algorithm. The depth of the
-        /// tree is based from <see cref="maximumDepth"/>.
+        /// tree is based from <see cref="Lavel"/>.
         /// </summary>
         /// <param name="player"></param>
         /// <param name="rootNode"></param>
         /// <param name="depth"></param>
         private void createTree(ActivePlayer player, Node rootNode, int depth)
         {
-            if (depth >= maximumDepth)
+            if (depth >= (int)Lavel)
                 return;
 
             var moves = getPossibleMoves(rootNode);
@@ -125,13 +125,13 @@ namespace Connect4Game.Models
                 }
                 else
                 {
-                    score += Math.Pow(10.0, maximumDepth - depth);
+                    score += Math.Pow(10.0, (int)Lavel - depth);
                 }
             }
             else if (CheckForVictory(getOpponent(player), node.Board))
             {
                 score += -Math.Pow(100
-                    , maximumDepth - depth);
+                    , (int)Lavel - depth);
             }
             else
             {

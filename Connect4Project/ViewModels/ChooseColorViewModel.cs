@@ -11,16 +11,16 @@ namespace Connect4Game.ViewModels
 {
     class ChooseColorViewModel : Screen
     {
-        private Connect4Player _player1;
-        private Connect4Player _player2;
-        private Connect4Player currentPlayer;
+        private Player _player1;
+        private Player _player2;
+        private Player currentPlayer;
         public Brush Color { get; set; }
         public string ChooseColor
         {
             get => $"Choose color for {(currentPlayer.Name is "You"?(currentPlayer.Name+"rself"):currentPlayer.Name)}";
         }
 
-        public ChooseColorViewModel(Connect4Player player1, Connect4Player player2)
+        public ChooseColorViewModel(Player player1, Player player2)
         {
             currentPlayer = _player1 = player1;
             _player2 = player2;

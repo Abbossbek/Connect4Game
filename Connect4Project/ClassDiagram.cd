@@ -9,7 +9,7 @@
   <Class Name="Connect4Game.Models.AIPlayer" Collapsed="true">
     <Position X="15.5" Y="2" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>BAAAIAAAAAAAAAAFAEAACAAIAAAAAAAAAAQACAAAAAI=</HashCode>
+      <HashCode>BAAAAAAAEAAAAAAFAEAACAAIAAAAAgAAAAQACAAAAAA=</HashCode>
       <FileName>Models\AIPlayer.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -20,18 +20,18 @@
       <FileName>Models\Board.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Connect4Game.Models.Connect4Player" Collapsed="true">
+  <Class Name="Connect4Game.Models.Player" Collapsed="true">
     <Position X="15.5" Y="0.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAgAAAAAA=</HashCode>
-      <FileName>Models\Connect4Player.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAAAAAAgAAAAAAgAAAAAA=</HashCode>
+      <FileName>Models\Player.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Connect4Game.Models.EasyAIPlayer" Collapsed="true">
+  <Class Name="Connect4Game.Models.HumanPlayer" Collapsed="true">
     <Position X="13.25" Y="3.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Models\EasyAIPlayer.cs</FileName>
+      <FileName>Models\HumanPlayer.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Connect4Game.Models.GameModel" Collapsed="true">
@@ -53,20 +53,6 @@
     <TypeIdentifier>
       <HashCode>AAAAAAAAAACAAEAAAAAAAAAAAAAAAAAAAABAAAAAAAA=</HashCode>
       <FileName>Models\GameUtils.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="Connect4Game.Models.HardAIPlayer" Collapsed="true">
-    <Position X="15.5" Y="3.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Models\HardAIPlayer.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="Connect4Game.Models.MediumAIPlayer" Collapsed="true">
-    <Position X="17.75" Y="3.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Models\MediumAIPlayer.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Connect4Game.Utils.DataHelper" Collapsed="true">

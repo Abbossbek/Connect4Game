@@ -20,7 +20,7 @@ namespace Connect4Game.ViewModels
             }
         }
 
-        public SaveGameViewModel(Connect4Player player1, Connect4Player player2, int[,] gameMap)
+        public SaveGameViewModel(Player player1, Player player2, int[,] gameMap)
         {
             var list = new List<int>();
             foreach (var item in gameMap)
@@ -28,17 +28,9 @@ namespace Connect4Game.ViewModels
                 list.Add(item);
             }
             _game = new GameModel() { Player1 = player1, Player2 = player2, GameMap = list };
-            if (player2.GetType() == typeof(EasyAIPlayer))
+            if (player2.GetType() == typeof(AIPlayer))
             {
-                _game.Depth = 1;
-            }
-            else if (player2.GetType() == typeof(MediumAIPlayer))
-            {
-                _game.Depth = 2;
-            }
-            else if (player2.GetType() == typeof(HardAIPlayer))
-            {
-                _game.Depth = 3;
+                _game.Depth = (int)((AIPlayer)player2).Lavel;
             }
             _games = DataHelper.GetValue<List<GameModel>>("games")?? new List<GameModel>();
         }
