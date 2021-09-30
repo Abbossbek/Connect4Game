@@ -10,8 +10,10 @@ namespace Connect4Game.Models
     {
         public string Name { get; set; }
         public int Depth { get; set; }
-        public Player Player1 { get; set; }
-        public Player Player2 { get; set; }
+        public string Player1 { get; set; }
+        public string Player1Color { get; set; }
+        public string Player2 { get; set; }
+        public string Player2Color { get; set; }
         public List<int> GameMap { get; set; }
     }
 }

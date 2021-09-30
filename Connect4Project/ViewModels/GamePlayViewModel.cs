@@ -131,19 +131,16 @@ namespace Connect4Game.ViewModels
             _canPlay = true;
             _steps = new();
         }
-        public GamePlayViewModel(GameModel gameModel) : this(gameModel.Player1, gameModel.Player2)
+        public GamePlayViewModel(GameModel gameModel) 
+            : this(
+                  new HumanPlayer() { Name = gameModel.Player1, Color = gameModel.Player1Color },
+                  gameModel.Depth > 0 ? new AIPlayer((DifficultyLevel)gameModel.Depth) { Name = gameModel.Player2, Color = gameModel.Player2Color }
+                  : new HumanPlayer() { Name = gameModel.Player1, Color = gameModel.Player1Color })
         {
             for (int i = 0; i < gameModel.GameMap.Count; i++)
             {
                 _gameMap[i / 7, i % 7] = gameModel.GameMap[i]; // 
             }
-            _player2 = gameModel.Depth switch
-            {
-                1 => new AIPlayer(DifficultyLevel.Easy) { Name = _player2.Name, Color = _player2.Color },
-                2 => new AIPlayer(DifficultyLevel.Normal) { Name = _player2.Name, Color = _player2.Color },
-                3 => new AIPlayer(DifficultyLevel.Hard) { Name = _player2.Name, Color = _player2.Color },
-                _ => _player2
-            };
         }
 
         public void RunOperation(object obj)

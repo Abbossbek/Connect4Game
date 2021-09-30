@@ -32,8 +32,8 @@
                                  Margin="5" >
                             <StackPanel >
                                 <TextBlock Text="{Binding Name}" FontSize="25"/>
-                                <TextBlock Text="{Binding Player1.Name, StringFormat='Player 1: {0}'}" FontSize="16"/>
-                                <TextBlock Text="{Binding Player2.Name, StringFormat='Player 2: {0}'}" FontSize="16"/>
+                                <TextBlock Text="{Binding Player1, StringFormat='Player 1: {0}'}" FontSize="16"/>
+                                <TextBlock Text="{Binding Player2, StringFormat='Player 2: {0}'}" FontSize="16"/>
                             </StackPanel>
                         </Button>
                     </DataTemplate>

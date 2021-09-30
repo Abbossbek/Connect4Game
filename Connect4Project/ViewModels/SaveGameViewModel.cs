@@ -27,7 +27,7 @@ namespace Connect4Game.ViewModels
             {
                 list.Add(item);
             }
-            _game = new GameModel() { Player1 = player1, Player2 = player2, GameMap = list };
+            _game = new GameModel() { Player1 = player1.Name, Player1Color = player1.Color, Player2 = player2.Name, Player2Color = player2.Color, GameMap = list };
             if (player2.GetType() == typeof(AIPlayer))
             {
                 _game.Depth = (int)((AIPlayer)player2).Lavel;
